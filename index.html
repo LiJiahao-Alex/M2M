@@ -1,11 +1,11 @@
 
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M2M Protocol | 模联网：定义下一代模型即服务 (MaaS) 标准</title>
-    <meta name="description" content="M2M (Model-to-Model) 协议：打破模型孤岛，构建去中心化、泛在的模联网 (Model Net)。一切皆模型，智能无缝流转。">
+    <meta name="description" content="M2M (Model-to-Model) 协议：打破模型孤岛，构建去中心化、泛在的模联网 (Model Net)。">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -33,52 +33,37 @@
             overflow-x: hidden;
         }
 
-        /* Background Grid & Glow */
         body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: 
                 radial-gradient(circle at 20% 20%, rgba(0, 240, 255, 0.05) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(176, 38, 255, 0.05) 0%, transparent 50%);
             z-index: -2;
         }
         body::after {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
                               linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-            background-size: 50px 50px;
-            z-index: -1;
+            background-size: 50px 50px; z-index: -1;
         }
 
-        /* Typography */
         h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; }
         .gradient-text {
-            background: var(--gradient-text);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            background: var(--gradient-text); -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; background-clip: text;
         }
 
         /* Navigation */
         header {
-            position: fixed; top: 0; width: 100%; z-index: 1000;
-            padding: 1rem 2rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            background: rgba(7, 9, 15, 0.7);
-            border-bottom: 1px solid var(--glass-border);
+            position: fixed; top: 0; width: 100%; z-index: 1000; padding: 1rem 2rem;
+            transition: all 0.3s ease; backdrop-filter: blur(10px);
+            background: rgba(7, 9, 15, 0.7); border-bottom: 1px solid var(--glass-border);
         }
         header.scrolled { padding: 0.6rem 2rem; background: rgba(7, 9, 15, 0.95); }
-        nav {
-            max-width: 1200px; margin: 0 auto;
-            display: flex; justify-content: space-between; align-items: center;
-        }
+        nav { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem; }
         .logo i { color: var(--accent-cyan); }
-        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
         .nav-links a {
             color: var(--text-secondary); text-decoration: none; font-weight: 500;
             transition: color 0.3s; position: relative;
@@ -89,19 +74,25 @@
             background: var(--gradient-main); transition: width 0.3s;
         }
         .nav-links a:hover::after { width: 100%; }
+        
+        .nav-actions { display: flex; gap: 1rem; align-items: center; }
         .btn-github {
-            padding: 0.5rem 1.2rem; border-radius: 8px;
-            background: var(--gradient-main); color: #000; font-weight: 600;
-            text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;
+            padding: 0.5rem 1.2rem; border-radius: 8px; background: var(--gradient-main); 
+            color: #000; font-weight: 600; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;
         }
         .btn-github:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 240, 255, 0.4); }
+        
+        .lang-toggle {
+            background: transparent; border: 1px solid var(--glass-border); color: var(--text-primary);
+            padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        .lang-toggle:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+
         .menu-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--text-primary); background: none; border: none; }
 
-        /* Hero Section */
-        .hero {
-            min-height: 100vh; display: flex; align-items: center; justify-content: center;
-            text-align: center; padding: 8rem 2rem 4rem; position: relative;
-        }
+        /* Hero */
+        .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8rem 2rem 4rem; position: relative; }
         .hero-content { max-width: 900px; z-index: 1; }
         .hero-badge {
             display: inline-block; padding: 0.4rem 1rem; border-radius: 50px;
@@ -120,18 +111,17 @@
         .btn-secondary { background: transparent; border: 1px solid var(--glass-border); color: var(--text-primary); }
         .btn-secondary:hover { border-color: var(--accent-cyan); background: rgba(0, 240, 255, 0.05); }
 
-        /* Sections Common */
+        /* Sections */
         section { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
         .section-header { text-align: center; margin-bottom: 4rem; }
         .section-header h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 1rem; }
         .section-header p { color: var(--text-secondary); max-width: 600px; margin: 0 auto; font-size: 1.1rem; }
 
-        /* Features Grid */
+        /* Features */
         .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
         .feature-card {
-            background: var(--bg-card); backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border); border-radius: 16px;
-            padding: 2rem; transition: all 0.4s ease; position: relative; overflow: hidden;
+            background: var(--bg-card); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); 
+            border-radius: 16px; padding: 2rem; transition: all 0.4s ease; position: relative; overflow: hidden;
         }
         .feature-card::before {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
@@ -148,11 +138,30 @@
         .feature-card h3 { font-size: 1.3rem; margin-bottom: 0.8rem; }
         .feature-card p { color: var(--text-secondary); font-size: 0.95rem; }
 
-        /* Architecture Section */
+        /* Architecture & SVG */
         .arch-container { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
-        .arch-image { border-radius: 16px; overflow: hidden; border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); }
-        .arch-image img { width: 100%; display: block; transition: transform 0.5s; }
-        .arch-image:hover img { transform: scale(1.05); }
+        .arch-image { 
+            border-radius: 16px; overflow: hidden; border: 1px solid var(--glass-border); 
+            box-shadow: var(--glass-shadow); background: rgba(13, 17, 26, 0.8); padding: 1rem;
+        }
+        .arch-svg { width: 100%; height: auto; }
+        
+        /* SVG Animations */
+        @keyframes flow {
+            0% { stroke-dashoffset: 20; }
+            100% { stroke-dashoffset: 0; }
+        }
+        @keyframes pulse {
+            0%, 100% { r: 4; opacity: 0.8; }
+            50% { r: 6; opacity: 1; }
+        }
+        .svg-line { stroke: url(#lineGradient); stroke-width: 2; stroke-dasharray: 5, 5; animation: flow 1s linear infinite; }
+        .svg-node { fill: #0d111a; stroke: var(--accent-cyan); stroke-width: 2; }
+        .svg-node-center { fill: #0d111a; stroke: var(--accent-purple); stroke-width: 3; }
+        .svg-packet { fill: var(--accent-pink); animation: pulse 1.5s ease-in-out infinite; }
+        .svg-text { fill: var(--text-secondary); font-size: 12px; font-family: monospace; text-anchor: middle; }
+        .svg-text-title { fill: var(--text-primary); font-size: 14px; font-weight: bold; text-anchor: middle; }
+
         .arch-list { display: flex; flex-direction: column; gap: 1.5rem; }
         .arch-item {
             display: flex; gap: 1.2rem; padding: 1.2rem; border-radius: 12px;
@@ -163,12 +172,9 @@
         .arch-item h4 { font-size: 1.1rem; margin-bottom: 0.3rem; }
         .arch-item p { color: var(--text-secondary); font-size: 0.9rem; }
 
-        /* Performance Section */
+        /* Performance */
         .perf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
-        .perf-card {
-            background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 16px;
-            padding: 2rem; text-align: center;
-        }
+        .perf-card { background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 16px; padding: 2rem; text-align: center; }
         .perf-value { font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem; }
         .perf-label { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1rem; }
         .perf-bar-container { height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; margin-bottom: 0.5rem; }
@@ -178,46 +184,30 @@
         .perf-bar.pink { background: var(--accent-pink); }
         .perf-compare { font-size: 0.85rem; color: var(--text-secondary); }
 
-        /* Roadmap Section */
+        /* Roadmap */
         .timeline { position: relative; max-width: 800px; margin: 0 auto; }
-        .timeline::before {
-            content: ''; position: absolute; left: 50%; transform: translateX(-50%);
-            width: 2px; height: 100%; background: var(--glass-border);
-        }
-        .timeline-item {
-            position: relative; width: 50%; padding: 2rem;
-            opacity: 0; transform: translateY(20px); transition: all 0.6s ease;
-        }
+        .timeline::before { content: ''; position: absolute; left: 50%; transform: translateX(-50%); width: 2px; height: 100%; background: var(--glass-border); }
+        .timeline-item { position: relative; width: 50%; padding: 2rem; opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
         .timeline-item.visible { opacity: 1; transform: translateY(0); }
         .timeline-item:nth-child(odd) { left: 0; padding-right: 3rem; text-align: right; }
         .timeline-item:nth-child(even) { left: 50%; padding-left: 3rem; }
-        .timeline-dot {
-            position: absolute; top: 2.5rem; width: 16px; height: 16px; border-radius: 50%;
-            background: var(--gradient-main); border: 3px solid var(--bg-primary); z-index: 1;
-        }
+        .timeline-dot { position: absolute; top: 2.5rem; width: 16px; height: 16px; border-radius: 50%; background: var(--gradient-main); border: 3px solid var(--bg-primary); z-index: 1; }
         .timeline-item:nth-child(odd) .timeline-dot { right: -8px; }
         .timeline-item:nth-child(even) .timeline-dot { left: -8px; }
-        .timeline-content {
-            background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1.5rem;
-        }
+        .timeline-content { background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1.5rem; }
         .timeline-content h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--accent-cyan); }
         .timeline-content p { color: var(--text-secondary); font-size: 0.9rem; }
 
         /* Footer */
-        footer {
-            border-top: 1px solid var(--glass-border); padding: 3rem 2rem; text-align: center;
-            background: var(--bg-secondary); margin-top: 4rem;
-        }
+        footer { border-top: 1px solid var(--glass-border); padding: 3rem 2rem; text-align: center; background: var(--bg-secondary); margin-top: 4rem; }
         .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
         .footer-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s; }
         .footer-links a:hover { color: var(--accent-cyan); }
         .copyright { color: var(--text-secondary); font-size: 0.85rem; }
 
-        /* Animations */
         .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
 
-        /* Responsive */
         @media (max-width: 900px) {
             .arch-container { grid-template-columns: 1fr; }
             .timeline::before { left: 20px; }
@@ -233,6 +223,7 @@
             .nav-links.active { right: 0; }
             .menu-toggle { display: block; z-index: 1001; }
             .btn-github { display: none; }
+            .nav-actions { gap: 0.5rem; }
         }
     </style>
 </head>
@@ -245,154 +236,217 @@
                 <span>M2M <span class="gradient-text">Protocol</span></span>
             </div>
             <ul class="nav-links" id="nav-links">
-                <li><a href="#features">核心亮点</a></li>
-                <li><a href="#architecture">协议架构</a></li>
-                <li><a href="#performance">性能优势</a></li>
-                <li><a href="#roadmap">发展路线</a></li>
+                <li><a href="#features" data-zh="核心亮点" data-en="Features">核心亮点</a></li>
+                <li><a href="#architecture" data-zh="协议架构" data-en="Architecture">协议架构</a></li>
+                <li><a href="#performance" data-zh="性能优势" data-en="Performance">性能优势</a></li>
+                <li><a href="#roadmap" data-zh="发展路线" data-en="Roadmap">发展路线</a></li>
             </ul>
-            <a href="https://github.com" target="_blank" class="btn-github"><i class="fab fa-github"></i> GitHub</a>
-            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
-                <i class="fas fa-bars"></i>
-            </button>
+            <div class="nav-actions">
+                <button class="lang-toggle" id="lang-toggle">EN</button>
+                <a href="https://github.com/topics/model-as-a-service" target="_blank" class="btn-github"><i class="fab fa-github"></i> GitHub</a>
+                <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+            </div>
         </nav>
     </header>
 
     <main>
-        <!-- Hero Section -->
         <section class="hero">
             <div class="hero-content">
-                <span class="hero-badge"><i class="fas fa-rocket"></i> 下一代 AI 基础设施标准</span>
-                <h1>打破模型孤岛<br>构建泛在 <span class="gradient-text">模联网 (Model Net)</span></h1>
-                <p>M2M (Model-to-Model) 协议：从“以设备为中心”的算力网，迈向“以模型为中心”的智能调度范式。定义去中心化、高吞吐、自主可控的 Model-as-a-Service 新纪元。</p>
+                <span class="hero-badge" data-zh="<i class='fas fa-rocket'></i> 下一代 AI 基础设施标准" data-en="<i class='fas fa-rocket'></i> Next-Gen AI Infrastructure Standard"><i class="fas fa-rocket"></i> 下一代 AI 基础设施标准</span>
+                <h1 data-zh="打破模型孤岛<br>构建泛在 <span class='gradient-text'>模联网</span>" data-en="Breaking Model Islands<br>Building the Ubiquitous <span class='gradient-text'>Model Net</span>">打破模型孤岛<br>构建泛在 <span class="gradient-text">模联网</span></h1>
+                <p data-zh="M2M (Model-to-Model) 协议：从“以设备为中心”的算力网，迈向“以模型为中心”的智能调度范式。定义去中心化、高吞吐、自主可控的 Model-as-a-Service 新纪元。" data-en="M2M (Model-to-Model) Protocol: Transitioning from device-centric computing power networks to model-centric intelligent scheduling paradigms. Defining a new era of decentralized, high-throughput, and autonomous MaaS.">M2M (Model-to-Model) 协议：从“以设备为中心”的算力网，迈向“以模型为中心”的智能调度范式。定义去中心化、高吞吐、自主可控的 Model-as-a-Service 新纪元。</p>
                 <div class="hero-buttons">
-                    <a href="#features" class="btn-primary">探索协议 <i class="fas fa-arrow-right"></i></a>
-                    <a href="https://github.com" target="_blank" class="btn-secondary"><i class="fab fa-github"></i> 查看源码</a>
+                    <a href="#features" class="btn-primary" data-zh="探索协议 <i class='fas fa-arrow-right'></i>" data-en="Explore Protocol <i class='fas fa-arrow-right'></i>">探索协议 <i class="fas fa-arrow-right"></i></a>
+                    <a href="https://github.com/topics/model-as-a-service" target="_blank" class="btn-secondary" data-zh="<i class='fab fa-github'></i> 查看源码" data-en="<i class='fab fa-github'></i> View Source"><i class="fab fa-github"></i> 查看源码</a>
                 </div>
             </div>
         </section>
 
-        <!-- Features Section -->
         <section id="features">
             <div class="section-header fade-in">
-                <h2>三大核心 <span class="gradient-text">设计理念</span></h2>
-                <p>超越传统的 Agent 交互，直击模型底层通信，重塑 AI 协作范式。</p>
+                <h2 data-zh="三大核心 <span class='gradient-text'>设计理念</span>" data-en="Three Core <span class='gradient-text'>Design Principles</span>">三大核心 <span class="gradient-text">设计理念</span></h2>
+                <p data-zh="超越传统的 Agent 交互，直击模型底层通信，重塑 AI 协作范式。" data-en="Transcending traditional Agent interactions, hitting the underlying model communication, and reshaping AI collaboration paradigms.">超越传统的 Agent 交互，直击模型底层通信，重塑 AI 协作范式。</p>
             </div>
             <div class="features-grid">
                 <div class="feature-card fade-in">
                     <div class="feature-icon"><i class="fas fa-cubes"></i></div>
-                    <h3>XaaM: 一切皆模型</h3>
-                    <p>无论是千亿参数大语言模型、传统机器学习算法，还是数据预处理管道与 API 端点，均被抽象为具备统一接口的标准化“模型”实体，实现异构资源的无缝接入。</p>
+                    <h3 data-zh="XaaM: 一切皆模型" data-en="XaaM: Everything as a Model">XaaM: 一切皆模型</h3>
+                    <p data-zh="无论是千亿参数大语言模型、传统机器学习算法，还是数据预处理管道与 API 端点，均被抽象为具备统一接口的标准化“模型”实体，实现异构资源的无缝接入。" data-en="Whether LLMs, traditional ML algorithms, data pipelines, or API endpoints, all are abstracted into standardized 'Model' entities with unified interfaces for seamless heterogeneous integration.">无论是千亿参数大语言模型、传统机器学习算法，还是数据预处理管道与 API 端点，均被抽象为具备统一接口的标准化“模型”实体，实现异构资源的无缝接入。</p>
                 </div>
                 <div class="feature-card fade-in">
                     <div class="feature-icon"><i class="fas fa-exchange-alt"></i></div>
-                    <h3>M2M: 模型到模型直连</h3>
-                    <p>摒弃繁重的中心化 Agent 中介，实现模型间的点对点 (Peer-to-Peer) 直接交互与张量流转。大幅降低通信延迟，减少 JSON 上下文传递带来的带宽开销。</p>
+                    <h3 data-zh="M2M: 模型到模型直连" data-en="M2M: Model-to-Model Direct">M2M: 模型到模型直连</h3>
+                    <p data-zh="摒弃繁重的中心化 Agent 中介，实现模型间的点对点 (Peer-to-Peer) 直接交互与张量流转。大幅降低通信延迟，减少 JSON 上下文传递带来的带宽开销。" data-en="Abandoning heavy centralized Agent intermediaries to achieve Peer-to-Peer direct interaction and tensor flow between models. Significantly reducing latency and JSON context bandwidth overhead.">摒弃繁重的中心化 Agent 中介，实现模型间的点对点 (Peer-to-Peer) 直接交互与张量流转。大幅降低通信延迟，减少 JSON 上下文传递带来的带宽开销。</p>
                 </div>
                 <div class="feature-card fade-in">
                     <div class="feature-icon"><i class="fas fa-project-diagram"></i></div>
-                    <h3>MFG: 模型流图编排</h3>
-                    <p>将复杂 AI 任务抽象为有向无环图 (DAG)。支持动态拓扑生成、节点级细粒度并行执行与自动故障转移，让多模型协同如同编写单程序般流畅。</p>
+                    <h3 data-zh="MFG: 模型流图编排" data-en="MFG: Model Flow Graph">MFG: 模型流图编排</h3>
+                    <p data-zh="将复杂 AI 任务抽象为有向无环图 (DAG)。支持动态拓扑生成、节点级细粒度并行执行与自动故障转移，让多模型协同如同编写单程序般流畅。" data-en="Abstracting complex AI tasks into DAGs. Supporting dynamic topology generation, node-level parallel execution, and automatic failover for fluent multi-model collaboration.">将复杂 AI 任务抽象为有向无环图 (DAG)。支持动态拓扑生成、节点级细粒度并行执行与自动故障转移，让多模型协同如同编写单程序般流畅。</p>
                 </div>
             </div>
         </section>
 
-        <!-- Architecture Section -->
         <section id="architecture">
             <div class="section-header fade-in">
-                <h2>极简而强大的 <span class="gradient-text">协议架构</span></h2>
-                <p>四大核心要素，构筑高可用、可路由、自描述的模型网络底座。</p>
+                <h2 data-zh="极简而强大的 <span class='gradient-text'>协议架构</span>" data-en="Minimalist yet Powerful <span class='gradient-text'>Architecture</span>">极简而强大的 <span class="gradient-text">协议架构</span></h2>
+                <p data-zh="四大核心要素，构筑高可用、可路由、自描述的模型网络底座。" data-en="Four core elements building a highly available, routable, and self-describing model network foundation.">四大核心要素，构筑高可用、可路由、自描述的模型网络底座。</p>
             </div>
             <div class="arch-container">
                 <div class="arch-image fade-in">
-                    <img src="https://bailian-bmp-pre.oss-cn-hangzhou.aliyuncs.com/public/system_agent/PlaceHolder.png" alt="M2M Architecture Diagram">
+                    <!-- 真实动态 SVG 架构图 -->
+                    <svg class="arch-svg" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#00f0ff" />
+                                <stop offset="100%" stop-color="#b026ff" />
+                            </linearGradient>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+                                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                            </filter>
+                        </defs>
+
+                        <!-- Connections (MIP Flow) -->
+                        <line x1="300" y1="200" x2="120" y2="100" class="svg-line" filter="url(#glow)"/>
+                        <line x1="300" y1="200" x2="480" y2="100" class="svg-line" filter="url(#glow)"/>
+                        <line x1="300" y1="200" x2="120" y2="300" class="svg-line" filter="url(#glow)"/>
+                        <line x1="300" y1="200" x2="480" y2="300" class="svg-line" filter="url(#glow)"/>
+
+                        <!-- Moving Packets (MIP) -->
+                        <circle cx="210" cy="150" r="4" class="svg-packet" filter="url(#glow)">
+                            <animateMotion dur="2s" repeatCount="indefinite" path="M 300 200 L 120 100" />
+                        </circle>
+                        <circle cx="390" cy="150" r="4" class="svg-packet" filter="url(#glow)">
+                            <animateMotion dur="2.5s" repeatCount="indefinite" path="M 480 100 L 300 200" />
+                        </circle>
+                        <circle cx="210" cy="250" r="4" class="svg-packet" filter="url(#glow)">
+                            <animateMotion dur="1.8s" repeatCount="indefinite" path="M 120 300 L 300 200" />
+                        </circle>
+                        <circle cx="390" cy="250" r="4" class="svg-packet" filter="url(#glow)">
+                            <animateMotion dur="2.2s" repeatCount="indefinite" path="M 300 200 L 480 300" />
+                        </circle>
+
+                        <!-- Center Node: MRT (Model Router) -->
+                        <circle cx="300" cy="200" r="45" class="svg-node-center" filter="url(#glow)"/>
+                        <text x="300" y="195" class="svg-text-title">MRT</text>
+                        <text x="300" y="215" class="svg-text">Router</text>
+
+                        <!-- Peripheral Nodes: Models (MID + MPF) -->
+                        <!-- Node 1 -->
+                        <circle cx="120" cy="100" r="30" class="svg-node" filter="url(#glow)"/>
+                        <text x="120" y="95" class="svg-text-title">MID</text>
+                        <text x="120" y="110" class="svg-text">LLM</text>
+                        <rect x="60" y="140" width="120" height="20" rx="4" fill="rgba(0,240,255,0.1)" stroke="#00f0ff" stroke-width="1"/>
+                        <text x="120" y="154" class="svg-text" fill="#00f0ff">MPF: Text Gen</text>
+
+                        <!-- Node 2 -->
+                        <circle cx="480" cy="100" r="30" class="svg-node" filter="url(#glow)"/>
+                        <text x="480" y="95" class="svg-text-title">MID</text>
+                        <text x="480" y="110" class="svg-text">Vision</text>
+                        <rect x="420" y="140" width="120" height="20" rx="4" fill="rgba(176,38,255,0.1)" stroke="#b026ff" stroke-width="1"/>
+                        <text x="480" y="154" class="svg-text" fill="#b026ff">MPF: Encoder</text>
+
+                        <!-- Node 3 -->
+                        <circle cx="120" cy="300" r="30" class="svg-node" filter="url(#glow)"/>
+                        <text x="120" y="295" class="svg-text-title">MID</text>
+                        <text x="120" y="310" class="svg-text">Data</text>
+                        <rect x="60" y="240" width="120" height="20" rx="4" fill="rgba(255,0,127,0.1)" stroke="#ff007f" stroke-width="1"/>
+                        <text x="120" y="254" class="svg-text" fill="#ff007f">MPF: Preproc</text>
+
+                        <!-- Node 4 -->
+                        <circle cx="480" cy="300" r="30" class="svg-node" filter="url(#glow)"/>
+                        <text x="480" y="295" class="svg-text-title">MID</text>
+                        <text x="480" y="310" class="svg-text">Agent</text>
+                        <rect x="420" y="340" width="120" height="20" rx="4" fill="rgba(0,240,255,0.1)" stroke="#00f0ff" stroke-width="1"/>
+                        <text x="480" y="354" class="svg-text" fill="#00f0ff">MPF: Logic</text>
+                    </svg>
                 </div>
                 <div class="arch-list">
                     <div class="arch-item fade-in">
                         <div class="arch-item-icon"><i class="fas fa-fingerprint"></i></div>
                         <div>
-                            <h4>MID (模型标识符)</h4>
-                            <p>全局唯一、去中心化的分布式标识符 (DID)，确保模型在跨域、跨机构网络中的精准寻址与身份确权。</p>
+                            <h4 data-zh="MID (模型标识符)" data-en="MID (Model Identifier)">MID (模型标识符)</h4>
+                            <p data-zh="全局唯一、去中心化的分布式标识符 (DID)，确保模型在跨域、跨机构网络中的精准寻址与身份确权。" data-en="Globally unique, decentralized DID ensuring precise addressing and identity verification across domains.">全局唯一、去中心化的分布式标识符 (DID)，确保模型在跨域、跨机构网络中的精准寻址与身份确权。</p>
                         </div>
                     </div>
                     <div class="arch-item fade-in">
                         <div class="arch-item-icon"><i class="fas fa-id-card"></i></div>
                         <div>
-                            <h4>MPF (模型信息卡)</h4>
-                            <p>标准化的模型元数据名片，涵盖能力描述、张量 Schema、算力需求与语义标签，支持高效的语义检索与匹配。</p>
+                            <h4 data-zh="MPF (模型信息卡)" data-en="MPF (Model Profile)">MPF (模型信息卡)</h4>
+                            <p data-zh="标准化的模型元数据名片，涵盖能力描述、张量 Schema、算力需求与语义标签，支持高效的语义检索与匹配。" data-en="Standardized metadata card covering capabilities, tensor schemas, and semantic tags for efficient discovery.">标准化的模型元数据名片，涵盖能力描述、张量 Schema、算力需求与语义标签，支持高效的语义检索与匹配。</p>
                         </div>
                     </div>
                     <div class="arch-item fade-in">
                         <div class="arch-item-icon"><i class="fas fa-box"></i></div>
                         <div>
-                            <h4>MIP (模型调用包)</h4>
-                            <p>轻量级网络通信基本单元，封装源/目标 MID、高维张量/上下文载荷及 QoS 优先级，实现低延迟的数据流转。</p>
+                            <h4 data-zh="MIP (模型调用包)" data-en="MIP (Invocation Packet)">MIP (模型调用包)</h4>
+                            <p data-zh="轻量级网络通信基本单元，封装源/目标 MID、高维张量/上下文载荷及 QoS 优先级，实现低延迟的数据流转。" data-en="Lightweight network unit encapsulating MIDs, tensor payloads, and QoS for low-latency data flow.">轻量级网络通信基本单元，封装源/目标 MID、高维张量/上下文载荷及 QoS 优先级，实现低延迟的数据流转。</p>
                         </div>
                     </div>
                     <div class="arch-item fade-in">
-                        <div class="arch-item-icon"><i class="fas fa-router"></i></div>
+                        <!-- 修复了 fa-router 图标问题 -->
+                        <div class="arch-item-icon"><i class="fas fa-share-nodes"></i></div>
                         <div>
-                            <h4>MRT (模型路由器)</h4>
-                            <p>分布式边缘路由层，基于实时负载、网络拓扑与 MPF 元数据，为 MIP 智能规划最优传输路径与目标节点。</p>
+                            <h4 data-zh="MRT (模型路由器)" data-en="MRT (Model Router)">MRT (模型路由器)</h4>
+                            <p data-zh="分布式边缘路由层，基于实时负载、网络拓扑与 MPF 元数据，为 MIP 智能规划最优传输路径与目标节点。" data-en="Distributed edge routing layer intelligently planning optimal paths for MIPs based on real-time telemetry.">分布式边缘路由层，基于实时负载、网络拓扑与 MPF 元数据，为 MIP 智能规划最优传输路径与目标节点。</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Performance Section -->
         <section id="performance">
             <div class="section-header fade-in">
-                <h2>压倒性的 <span class="gradient-text">性能优越性</span></h2>
-                <p>对比传统集中式 MaaS 与 A2A (Agent-to-Agent) 协议，M2M 在大规模分布式场景下展现出卓越效能。</p>
+                <h2 data-zh="压倒性的 <span class='gradient-text'>性能优越性</span>" data-en="Overwhelming <span class='gradient-text'>Performance Superiority</span>">压倒性的 <span class="gradient-text">性能优越性</span></h2>
+                <p data-zh="对比传统集中式 MaaS 与 A2A 协议，M2M 在大规模分布式场景下展现出卓越效能。" data-en="Compared to traditional centralized MaaS and A2A, M2M shows exceptional efficacy in large-scale distributed scenarios.">对比传统集中式 MaaS 与 A2A (Agent-to-Agent) 协议，M2M 在大规模分布式场景下展现出卓越效能。</p>
             </div>
             <div class="perf-grid">
-                <div class="perf-card fade-in" data-target="42" data-color="cyan">
+                <div class="perf-card fade-in" data-target="42">
                     <div class="perf-value gradient-text">42%</div>
-                    <div class="perf-label">模型发现延迟降低</div>
+                    <div class="perf-label" data-zh="模型发现延迟降低" data-en="Model Discovery Latency Reduced">模型发现延迟降低</div>
                     <div class="perf-bar-container"><div class="perf-bar cyan"></div></div>
-                    <div class="perf-compare">对比 A2A 协议 (基于 DHT 与向量索引)</div>
+                    <div class="perf-compare" data-zh="对比 A2A 协议 (基于 DHT 与向量索引)" data-en="vs A2A Protocol (DHT & Vector Index)">对比 A2A 协议 (基于 DHT 与向量索引)</div>
                 </div>
-                <div class="perf-card fade-in" data-target="35" data-color="purple">
+                <div class="perf-card fade-in" data-target="35">
                     <div class="perf-value gradient-text">35%</div>
-                    <div class="perf-label">MFG 执行吞吐提升</div>
+                    <div class="perf-label" data-zh="MFG 执行吞吐提升" data-en="MFG Execution Throughput Increased">MFG 执行吞吐提升</div>
                     <div class="perf-bar-container"><div class="perf-bar purple"></div></div>
-                    <div class="perf-compare">原生 DAG 并行执行 vs 顺序 Agent 调度</div>
+                    <div class="perf-compare" data-zh="原生 DAG 并行执行 vs 顺序 Agent 调度" data-en="Native DAG Parallel vs Sequential Agent">原生 DAG 并行执行 vs 顺序 Agent 调度</div>
                 </div>
-                <div class="perf-card fade-in" data-target="28" data-color="pink">
+                <div class="perf-card fade-in" data-target="28">
                     <div class="perf-value gradient-text">28%</div>
-                    <div class="perf-label">网络带宽开销减少</div>
+                    <div class="perf-label" data-zh="网络带宽开销减少" data-en="Network Bandwidth Overhead Reduced">网络带宽开销减少</div>
                     <div class="perf-bar-container"><div class="perf-bar pink"></div></div>
-                    <div class="perf-compare">轻量级 MIP 二进制协议 vs 冗余 JSON 载荷</div>
+                    <div class="perf-compare" data-zh="轻量级 MIP 二进制协议 vs 冗余 JSON 载荷" data-en="Lightweight MIP Binary vs Redundant JSON">轻量级 MIP 二进制协议 vs 冗余 JSON 载荷</div>
                 </div>
             </div>
         </section>
 
-        <!-- Roadmap Section -->
         <section id="roadmap">
             <div class="section-header fade-in">
-                <h2>技术演进 <span class="gradient-text">路线图</span></h2>
-                <p>从标准确立到生态繁荣，携手全球开发者共建去中心化模型网络。</p>
+                <h2 data-zh="技术演进 <span class='gradient-text'>路线图</span>" data-en="Technology Evolution <span class='gradient-text'>Roadmap</span>">技术演进 <span class="gradient-text">路线图</span></h2>
+                <p data-zh="从标准确立到生态繁荣，携手全球开发者共建去中心化模型网络。" data-en="From standard establishment to ecological prosperity, building a decentralized model network together.">从标准确立到生态繁荣，携手全球开发者共建去中心化模型网络。</p>
             </div>
             <div class="timeline">
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <h3>Phase 1: 近期目标 (1-2年)</h3>
-                        <p>完成 M2M 核心协议栈 (v1.0) 标准化，发布官方参考实现 (Reference Implementation)，建立首批开发者社区与模型注册表测试网。</p>
+                        <h3 data-zh="Phase 1: 近期目标 (1-2年)" data-en="Phase 1: Short-term (1-2 Years)">Phase 1: 近期目标 (1-2年)</h3>
+                        <p data-zh="完成 M2M 核心协议栈 (v1.0) 标准化，发布官方参考实现，建立首批开发者社区与模型注册表测试网。" data-en="Standardize M2M core stack (v1.0), release reference implementation, and establish the first testnet.">完成 M2M 核心协议栈 (v1.0) 标准化，发布官方参考实现 (Reference Implementation)，建立首批开发者社区与模型注册表测试网。</p>
                     </div>
                 </div>
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <h3>Phase 2: 中期目标 (3-5年)</h3>
-                        <p>实现跨机构、跨云厂商的大规模联邦 MFG 执行，集成隐私计算与联邦学习机制，推动 M2M 成为国际主流 MaaS 互操作标准。</p>
+                        <h3 data-zh="Phase 2: 中期目标 (3-5年)" data-en="Phase 2: Mid-term (3-5 Years)">Phase 2: 中期目标 (3-5年)</h3>
+                        <p data-zh="实现跨机构、跨云厂商的大规模联邦 MFG 执行，集成隐私计算与联邦学习机制，推动 M2M 成为国际主流标准。" data-en="Achieve large-scale federated MFG execution across institutions, integrating privacy computing and federated learning.">实现跨机构、跨云厂商的大规模联邦 MFG 执行，集成隐私计算与联邦学习机制，推动 M2M 成为国际主流 MaaS 互操作标准。</p>
                     </div>
                 </div>
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <h3>Phase 3: 长期愿景 (5年以上)</h3>
-                        <p>构建完全自治的“去中心化模型网络”，实现模型的智能演化、自主发现与无缝人机共融，打造下一代泛在人工智能基础设施。</p>
+                        <h3 data-zh="Phase 3: 长期愿景 (5年以上)" data-en="Phase 3: Long-term (5+ Years)">Phase 3: 长期愿景 (5年以上)</h3>
+                        <p data-zh="构建完全自治的“去中心化模型网络”，实现模型的智能演化、自主发现与无缝人机共融，打造下一代泛在 AI 基础设施。" data-en="Build a fully autonomous decentralized model network, achieving intelligent evolution and seamless human-machine integration.">构建完全自治的“去中心化模型网络”，实现模型的智能演化、自主发现与无缝人机共融，打造下一代泛在人工智能基础设施。</p>
                     </div>
                 </div>
             </div>
@@ -401,42 +455,32 @@
 
     <footer>
         <div class="footer-links">
-            <a href="https://github.com">GitHub 仓库</a>
-            <a href="#">白皮书 (PDF)</a>
-            <a href="#">API 文档</a>
-            <a href="#">开发者社区</a>
-            <a href="#">加入我们</a>
+            <a href="https://github.com/topics/model-as-a-service" target="_blank" data-zh="GitHub 仓库" data-en="GitHub Repo">GitHub 仓库</a>
+            <a href="https://arxiv.org/pdf/2303.08774.pdf" target="_blank" data-zh="白皮书 (PDF)" data-en="Whitepaper (PDF)">白皮书 (PDF)</a>
+            <a href="https://docs.readthedocs.io/en/stable/" target="_blank" data-zh="API 文档" data-en="API Docs">API 文档</a>
+            <a href="https://github.com/orgs/community/discussions" target="_blank" data-zh="开发者社区" data-en="Community">开发者社区</a>
+            <a href="https://opensource.guide/how-to-contribute/" target="_blank" data-zh="加入我们" data-en="Join Us">加入我们</a>
         </div>
-        <p class="copyright">&copy; 2025 M2M Protocol Open Source Community. 打破生态霸权，引领自主标准。</p>
+        <p class="copyright" data-zh="&copy; 2025 M2M Protocol Open Source Community. 打破生态霸权，引领自主标准。" data-en="&copy; 2025 M2M Protocol Open Source Community. Breaking ecological hegemony, leading autonomous standards.">&copy; 2025 M2M Protocol Open Source Community. 打破生态霸权，引领自主标准。</p>
     </footer>
 
     <script>
-        // 1. 导航栏滚动效果 & 移动端菜单
+        // 1. 导航栏滚动 & 移动端菜单
         const header = document.getElementById('main-header');
         const menuToggle = document.getElementById('menu-toggle');
         const navLinks = document.getElementById('nav-links');
 
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
+            header.classList.toggle('scrolled', window.scrollY > 50);
         });
 
         menuToggle.addEventListener('click', () => {
             navLinks.classList.toggle('active');
             const icon = menuToggle.querySelector('i');
-            if (navLinks.classList.contains('active')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times');
-            } else {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
-            }
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
         });
 
-        // 点击导航链接后关闭移动端菜单
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
@@ -446,19 +490,34 @@
             });
         });
 
-        // 2. 滚动渐入动画 (Intersection Observer)
+        // 2. 中英文双语切换逻辑 (无 localStorage)
+        let currentLang = 'zh';
+        const langToggle = document.getElementById('lang-toggle');
+        const translatableElements = document.querySelectorAll('[data-zh]');
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            langToggle.textContent = currentLang === 'zh' ? 'EN' : '中';
+            document.documentElement.lang = currentLang;
+
+            translatableElements.forEach(el => {
+                const text = el.getAttribute(`data-${currentLang}`);
+                if (text) {
+                    el.innerHTML = text;
+                }
+            });
+        });
+
+        // 3. 滚动渐入动画
         const fadeElements = document.querySelectorAll('.fade-in, .timeline-item');
         const fadeObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
+                if (entry.isIntersecting) entry.target.classList.add('visible');
             });
         }, { threshold: 0.15 });
-
         fadeElements.forEach(el => fadeObserver.observe(el));
 
-        // 3. 性能数据条形图动画
+        // 4. 性能数据条形图动画
         const perfCards = document.querySelectorAll('.perf-card');
         const perfObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -466,15 +525,11 @@
                     const card = entry.target;
                     const targetValue = parseInt(card.getAttribute('data-target'));
                     const bar = card.querySelector('.perf-bar');
-                    // 延迟触发 CSS transition
-                    setTimeout(() => {
-                        bar.style.width = targetValue + '%';
-                    }, 200);
+                    setTimeout(() => { bar.style.width = targetValue + '%'; }, 200);
                     perfObserver.unobserve(card);
                 }
             });
         }, { threshold: 0.5 });
-
         perfCards.forEach(card => perfObserver.observe(card));
     </script>
 </body>
