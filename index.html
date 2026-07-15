@@ -1,0 +1,481 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M2M Protocol | 模联网：定义下一代模型即服务 (MaaS) 标准</title>
+    <meta name="description" content="M2M (Model-to-Model) 协议：打破模型孤岛，构建去中心化、泛在的模联网 (Model Net)。一切皆模型，智能无缝流转。">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #07090f;
+            --bg-secondary: #0d111a;
+            --bg-card: rgba(22, 27, 45, 0.6);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --accent-cyan: #00f0ff;
+            --accent-purple: #b026ff;
+            --accent-pink: #ff007f;
+            --gradient-main: linear-gradient(135deg, #00f0ff 0%, #b026ff 100%);
+            --gradient-text: linear-gradient(90deg, #00f0ff, #b026ff, #ff007f);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Background Grid & Glow */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(0, 240, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(176, 38, 255, 0.05) 0%, transparent 50%);
+            z-index: -2;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+        }
+
+        /* Typography */
+        h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; }
+        .gradient-text {
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Navigation */
+        header {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            padding: 1rem 2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            background: rgba(7, 9, 15, 0.7);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        header.scrolled { padding: 0.6rem 2rem; background: rgba(7, 9, 15, 0.95); }
+        nav {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem; }
+        .logo i { color: var(--accent-cyan); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a {
+            color: var(--text-secondary); text-decoration: none; font-weight: 500;
+            transition: color 0.3s; position: relative;
+        }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px;
+            background: var(--gradient-main); transition: width 0.3s;
+        }
+        .nav-links a:hover::after { width: 100%; }
+        .btn-github {
+            padding: 0.5rem 1.2rem; border-radius: 8px;
+            background: var(--gradient-main); color: #000; font-weight: 600;
+            text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-github:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 240, 255, 0.4); }
+        .menu-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--text-primary); background: none; border: none; }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: 8rem 2rem 4rem; position: relative;
+        }
+        .hero-content { max-width: 900px; z-index: 1; }
+        .hero-badge {
+            display: inline-block; padding: 0.4rem 1rem; border-radius: 50px;
+            background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.3);
+            color: var(--accent-cyan); font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem;
+        }
+        .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.1; margin-bottom: 1.5rem; }
+        .hero p { font-size: 1.25rem; color: var(--text-secondary); max-width: 700px; margin: 0 auto 2.5rem; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn-primary, .btn-secondary {
+            padding: 0.9rem 2rem; border-radius: 10px; font-size: 1rem; font-weight: 600;
+            text-decoration: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;
+        }
+        .btn-primary { background: var(--gradient-main); color: #000; }
+        .btn-primary:hover { box-shadow: 0 10px 25px rgba(0, 240, 255, 0.3); transform: translateY(-3px); }
+        .btn-secondary { background: transparent; border: 1px solid var(--glass-border); color: var(--text-primary); }
+        .btn-secondary:hover { border-color: var(--accent-cyan); background: rgba(0, 240, 255, 0.05); }
+
+        /* Sections Common */
+        section { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-header h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 1rem; }
+        .section-header p { color: var(--text-secondary); max-width: 600px; margin: 0 auto; font-size: 1.1rem; }
+
+        /* Features Grid */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .feature-card {
+            background: var(--bg-card); backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border); border-radius: 16px;
+            padding: 2rem; transition: all 0.4s ease; position: relative; overflow: hidden;
+        }
+        .feature-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: var(--gradient-main); transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
+        }
+        .feature-card:hover { transform: translateY(-8px); border-color: rgba(0, 240, 255, 0.3); box-shadow: var(--glass-shadow); }
+        .feature-card:hover::before { transform: scaleX(1); }
+        .feature-icon {
+            width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; margin-bottom: 1.5rem; background: rgba(0, 240, 255, 0.1); color: var(--accent-cyan);
+        }
+        .feature-card:nth-child(2) .feature-icon { background: rgba(176, 38, 255, 0.1); color: var(--accent-purple); }
+        .feature-card:nth-child(3) .feature-icon { background: rgba(255, 0, 127, 0.1); color: var(--accent-pink); }
+        .feature-card h3 { font-size: 1.3rem; margin-bottom: 0.8rem; }
+        .feature-card p { color: var(--text-secondary); font-size: 0.95rem; }
+
+        /* Architecture Section */
+        .arch-container { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        .arch-image { border-radius: 16px; overflow: hidden; border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); }
+        .arch-image img { width: 100%; display: block; transition: transform 0.5s; }
+        .arch-image:hover img { transform: scale(1.05); }
+        .arch-list { display: flex; flex-direction: column; gap: 1.5rem; }
+        .arch-item {
+            display: flex; gap: 1.2rem; padding: 1.2rem; border-radius: 12px;
+            background: var(--bg-card); border: 1px solid var(--glass-border); transition: all 0.3s;
+        }
+        .arch-item:hover { border-color: var(--accent-cyan); background: rgba(0, 240, 255, 0.03); }
+        .arch-item-icon { font-size: 1.5rem; color: var(--accent-cyan); min-width: 40px; text-align: center; padding-top: 0.2rem; }
+        .arch-item h4 { font-size: 1.1rem; margin-bottom: 0.3rem; }
+        .arch-item p { color: var(--text-secondary); font-size: 0.9rem; }
+
+        /* Performance Section */
+        .perf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .perf-card {
+            background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 16px;
+            padding: 2rem; text-align: center;
+        }
+        .perf-value { font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .perf-label { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1rem; }
+        .perf-bar-container { height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; margin-bottom: 0.5rem; }
+        .perf-bar { height: 100%; width: 0; border-radius: 4px; transition: width 1.5s cubic-bezier(0.25, 1, 0.5, 1); }
+        .perf-bar.cyan { background: var(--accent-cyan); }
+        .perf-bar.purple { background: var(--accent-purple); }
+        .perf-bar.pink { background: var(--accent-pink); }
+        .perf-compare { font-size: 0.85rem; color: var(--text-secondary); }
+
+        /* Roadmap Section */
+        .timeline { position: relative; max-width: 800px; margin: 0 auto; }
+        .timeline::before {
+            content: ''; position: absolute; left: 50%; transform: translateX(-50%);
+            width: 2px; height: 100%; background: var(--glass-border);
+        }
+        .timeline-item {
+            position: relative; width: 50%; padding: 2rem;
+            opacity: 0; transform: translateY(20px); transition: all 0.6s ease;
+        }
+        .timeline-item.visible { opacity: 1; transform: translateY(0); }
+        .timeline-item:nth-child(odd) { left: 0; padding-right: 3rem; text-align: right; }
+        .timeline-item:nth-child(even) { left: 50%; padding-left: 3rem; }
+        .timeline-dot {
+            position: absolute; top: 2.5rem; width: 16px; height: 16px; border-radius: 50%;
+            background: var(--gradient-main); border: 3px solid var(--bg-primary); z-index: 1;
+        }
+        .timeline-item:nth-child(odd) .timeline-dot { right: -8px; }
+        .timeline-item:nth-child(even) .timeline-dot { left: -8px; }
+        .timeline-content {
+            background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1.5rem;
+        }
+        .timeline-content h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--accent-cyan); }
+        .timeline-content p { color: var(--text-secondary); font-size: 0.9rem; }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--glass-border); padding: 3rem 2rem; text-align: center;
+            background: var(--bg-secondary); margin-top: 4rem;
+        }
+        .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .footer-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--accent-cyan); }
+        .copyright { color: var(--text-secondary); font-size: 0.85rem; }
+
+        /* Animations */
+        .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .arch-container { grid-template-columns: 1fr; }
+            .timeline::before { left: 20px; }
+            .timeline-item { width: 100%; left: 0 !important; padding-left: 50px !important; padding-right: 0 !important; text-align: left !important; }
+            .timeline-item .timeline-dot { left: 12px !important; right: auto !important; }
+        }
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 70%; height: 100vh;
+                background: var(--bg-secondary); flex-direction: column; padding: 5rem 2rem;
+                transition: right 0.3s ease; border-left: 1px solid var(--glass-border);
+            }
+            .nav-links.active { right: 0; }
+            .menu-toggle { display: block; z-index: 1001; }
+            .btn-github { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="main-header">
+        <nav>
+            <div class="logo">
+                <i class="fas fa-network-wired"></i>
+                <span>M2M <span class="gradient-text">Protocol</span></span>
+            </div>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#features">核心亮点</a></li>
+                <li><a href="#architecture">协议架构</a></li>
+                <li><a href="#performance">性能优势</a></li>
+                <li><a href="#roadmap">发展路线</a></li>
+            </ul>
+            <a href="https://github.com" target="_blank" class="btn-github"><i class="fab fa-github"></i> GitHub</a>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <span class="hero-badge"><i class="fas fa-rocket"></i> 下一代 AI 基础设施标准</span>
+                <h1>打破模型孤岛<br>构建泛在 <span class="gradient-text">模联网 (Model Net)</span></h1>
+                <p>M2M (Model-to-Model) 协议：从“以设备为中心”的算力网，迈向“以模型为中心”的智能调度范式。定义去中心化、高吞吐、自主可控的 Model-as-a-Service 新纪元。</p>
+                <div class="hero-buttons">
+                    <a href="#features" class="btn-primary">探索协议 <i class="fas fa-arrow-right"></i></a>
+                    <a href="https://github.com" target="_blank" class="btn-secondary"><i class="fab fa-github"></i> 查看源码</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features">
+            <div class="section-header fade-in">
+                <h2>三大核心 <span class="gradient-text">设计理念</span></h2>
+                <p>超越传统的 Agent 交互，直击模型底层通信，重塑 AI 协作范式。</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon"><i class="fas fa-cubes"></i></div>
+                    <h3>XaaM: 一切皆模型</h3>
+                    <p>无论是千亿参数大语言模型、传统机器学习算法，还是数据预处理管道与 API 端点，均被抽象为具备统一接口的标准化“模型”实体，实现异构资源的无缝接入。</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon"><i class="fas fa-exchange-alt"></i></div>
+                    <h3>M2M: 模型到模型直连</h3>
+                    <p>摒弃繁重的中心化 Agent 中介，实现模型间的点对点 (Peer-to-Peer) 直接交互与张量流转。大幅降低通信延迟，减少 JSON 上下文传递带来的带宽开销。</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon"><i class="fas fa-project-diagram"></i></div>
+                    <h3>MFG: 模型流图编排</h3>
+                    <p>将复杂 AI 任务抽象为有向无环图 (DAG)。支持动态拓扑生成、节点级细粒度并行执行与自动故障转移，让多模型协同如同编写单程序般流畅。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture Section -->
+        <section id="architecture">
+            <div class="section-header fade-in">
+                <h2>极简而强大的 <span class="gradient-text">协议架构</span></h2>
+                <p>四大核心要素，构筑高可用、可路由、自描述的模型网络底座。</p>
+            </div>
+            <div class="arch-container">
+                <div class="arch-image fade-in">
+                    <img src="https://bailian-bmp-pre.oss-cn-hangzhou.aliyuncs.com/public/system_agent/PlaceHolder.png" alt="M2M Architecture Diagram">
+                </div>
+                <div class="arch-list">
+                    <div class="arch-item fade-in">
+                        <div class="arch-item-icon"><i class="fas fa-fingerprint"></i></div>
+                        <div>
+                            <h4>MID (模型标识符)</h4>
+                            <p>全局唯一、去中心化的分布式标识符 (DID)，确保模型在跨域、跨机构网络中的精准寻址与身份确权。</p>
+                        </div>
+                    </div>
+                    <div class="arch-item fade-in">
+                        <div class="arch-item-icon"><i class="fas fa-id-card"></i></div>
+                        <div>
+                            <h4>MPF (模型信息卡)</h4>
+                            <p>标准化的模型元数据名片，涵盖能力描述、张量 Schema、算力需求与语义标签，支持高效的语义检索与匹配。</p>
+                        </div>
+                    </div>
+                    <div class="arch-item fade-in">
+                        <div class="arch-item-icon"><i class="fas fa-box"></i></div>
+                        <div>
+                            <h4>MIP (模型调用包)</h4>
+                            <p>轻量级网络通信基本单元，封装源/目标 MID、高维张量/上下文载荷及 QoS 优先级，实现低延迟的数据流转。</p>
+                        </div>
+                    </div>
+                    <div class="arch-item fade-in">
+                        <div class="arch-item-icon"><i class="fas fa-router"></i></div>
+                        <div>
+                            <h4>MRT (模型路由器)</h4>
+                            <p>分布式边缘路由层，基于实时负载、网络拓扑与 MPF 元数据，为 MIP 智能规划最优传输路径与目标节点。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Performance Section -->
+        <section id="performance">
+            <div class="section-header fade-in">
+                <h2>压倒性的 <span class="gradient-text">性能优越性</span></h2>
+                <p>对比传统集中式 MaaS 与 A2A (Agent-to-Agent) 协议，M2M 在大规模分布式场景下展现出卓越效能。</p>
+            </div>
+            <div class="perf-grid">
+                <div class="perf-card fade-in" data-target="42" data-color="cyan">
+                    <div class="perf-value gradient-text">42%</div>
+                    <div class="perf-label">模型发现延迟降低</div>
+                    <div class="perf-bar-container"><div class="perf-bar cyan"></div></div>
+                    <div class="perf-compare">对比 A2A 协议 (基于 DHT 与向量索引)</div>
+                </div>
+                <div class="perf-card fade-in" data-target="35" data-color="purple">
+                    <div class="perf-value gradient-text">35%</div>
+                    <div class="perf-label">MFG 执行吞吐提升</div>
+                    <div class="perf-bar-container"><div class="perf-bar purple"></div></div>
+                    <div class="perf-compare">原生 DAG 并行执行 vs 顺序 Agent 调度</div>
+                </div>
+                <div class="perf-card fade-in" data-target="28" data-color="pink">
+                    <div class="perf-value gradient-text">28%</div>
+                    <div class="perf-label">网络带宽开销减少</div>
+                    <div class="perf-bar-container"><div class="perf-bar pink"></div></div>
+                    <div class="perf-compare">轻量级 MIP 二进制协议 vs 冗余 JSON 载荷</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Roadmap Section -->
+        <section id="roadmap">
+            <div class="section-header fade-in">
+                <h2>技术演进 <span class="gradient-text">路线图</span></h2>
+                <p>从标准确立到生态繁荣，携手全球开发者共建去中心化模型网络。</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>Phase 1: 近期目标 (1-2年)</h3>
+                        <p>完成 M2M 核心协议栈 (v1.0) 标准化，发布官方参考实现 (Reference Implementation)，建立首批开发者社区与模型注册表测试网。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>Phase 2: 中期目标 (3-5年)</h3>
+                        <p>实现跨机构、跨云厂商的大规模联邦 MFG 执行，集成隐私计算与联邦学习机制，推动 M2M 成为国际主流 MaaS 互操作标准。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>Phase 3: 长期愿景 (5年以上)</h3>
+                        <p>构建完全自治的“去中心化模型网络”，实现模型的智能演化、自主发现与无缝人机共融，打造下一代泛在人工智能基础设施。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="https://github.com">GitHub 仓库</a>
+            <a href="#">白皮书 (PDF)</a>
+            <a href="#">API 文档</a>
+            <a href="#">开发者社区</a>
+            <a href="#">加入我们</a>
+        </div>
+        <p class="copyright">&copy; 2025 M2M Protocol Open Source Community. 打破生态霸权，引领自主标准。</p>
+    </footer>
+
+    <script>
+        // 1. 导航栏滚动效果 & 移动端菜单
+        const header = document.getElementById('main-header');
+        const menuToggle = document.getElementById('menu-toggle');
+        const navLinks = document.getElementById('nav-links');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = menuToggle.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // 点击导航链接后关闭移动端菜单
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                const icon = menuToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+        });
+
+        // 2. 滚动渐入动画 (Intersection Observer)
+        const fadeElements = document.querySelectorAll('.fade-in, .timeline-item');
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        fadeElements.forEach(el => fadeObserver.observe(el));
+
+        // 3. 性能数据条形图动画
+        const perfCards = document.querySelectorAll('.perf-card');
+        const perfObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const card = entry.target;
+                    const targetValue = parseInt(card.getAttribute('data-target'));
+                    const bar = card.querySelector('.perf-bar');
+                    // 延迟触发 CSS transition
+                    setTimeout(() => {
+                        bar.style.width = targetValue + '%';
+                    }, 200);
+                    perfObserver.unobserve(card);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        perfCards.forEach(card => perfObserver.observe(card));
+    </script>
+</body>
+</html>
